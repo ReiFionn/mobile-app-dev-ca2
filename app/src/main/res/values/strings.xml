@@ -14,6 +14,8 @@
     <string name="hint_eventCapacity">Event Capacity</string>
     <string name="searchbar_hint">Search Events</string>
     <string name="capacityText">Capacity:</string>
+    <string name="button_addImage"> Add Image </string>
+    <string name="select_event_image">Select event image</string>
 
     <string-array name="event_types">
         <item>Pop</item>

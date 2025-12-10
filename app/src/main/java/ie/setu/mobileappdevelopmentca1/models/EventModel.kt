@@ -1,5 +1,6 @@
 package ie.setu.mobileappdevelopmentca1.models
 
+import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -13,4 +14,5 @@ data class EventModel (
     var day: Int = 0,
     var type: String = "",
     var capacity: Int = 0,
+    var image: Uri = Uri.EMPTY
 ) : Parcelable

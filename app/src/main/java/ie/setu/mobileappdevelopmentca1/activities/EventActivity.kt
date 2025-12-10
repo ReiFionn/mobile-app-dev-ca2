@@ -1,5 +1,7 @@
 package ie.setu.mobileappdevelopmentca1.activities
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -7,6 +9,8 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.DatePicker
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -14,8 +18,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import ie.setu.mobileappdevelopmentca1.R
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityMainBinding
+import ie.setu.mobileappdevelopmentca1.helpers.showImagePicker
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 import ie.setu.mobileappdevelopmentca1.models.EventModel
 import timber.log.Timber.i
@@ -26,11 +32,16 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
     var event = EventModel()
     lateinit var app : MainApp
     var edit = false
+    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+    var image: Uri = Uri.EMPTY
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        registerImagePickerCallback()
 
         binding.toolbarAdd.title = title
         setSupportActionBar(binding.toolbarAdd)
@@ -70,6 +81,9 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
             binding.eventType.setText(event.type, false) //https://stackoverflow.com/questions/29906928/setting-value-in-autocompletetextview
             binding.eventCapacity.value = event.capacity
             binding.btnAdd.setText(R.string.save_event)
+            Picasso.get()
+                .load(event.image)
+                .into(binding.eventImage)
         }
 
         binding.btnAdd.setOnClickListener() {
@@ -96,6 +110,14 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
                 }
             }
         }
+
+        binding.chooseImage.setOnClickListener {
+            i("Select image")
+        }
+
+        binding.chooseImage.setOnClickListener {
+            showImagePicker(imageIntentLauncher)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -111,6 +133,26 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun registerImagePickerCallback() {
+        imageIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when(result.resultCode){
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Result ${result.data!!.data}")
+                            event.image = result.data!!.data!!
+                            Picasso.get()
+                                .load(event.image)
+                                .into(binding.eventImage)
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
+    }
+
 
 //    override fun onMapReady(googleMap: GoogleMap) {
 //        val waterford = LatLng(52.152999, -7.064298)

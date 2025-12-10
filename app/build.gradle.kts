@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.gson)
     implementation(libs.kotlin.logging)
+    implementation(libs.picasso)
 
     implementation(libs.timber)
 
