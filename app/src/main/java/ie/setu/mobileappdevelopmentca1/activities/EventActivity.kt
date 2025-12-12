@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -33,10 +34,9 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
     var event = EventModel()
     lateinit var app : MainApp
     var edit = false
-    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var imageIntentLauncher : ActivityResultLauncher<PickVisualMediaRequest>
     var image: Uri = Uri.EMPTY
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
-    var location = Location(52.245696, -7.139102, 15f)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,10 +120,19 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
         }
 
         binding.chooseImage.setOnClickListener {
-            showImagePicker(imageIntentLauncher)
+            val request = PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                .build()
+            imageIntentLauncher.launch(request)
         }
 
         binding.eventLocation.setOnClickListener {
+            val location = Location(52.245696, -7.139102, 15f)
+            if (event.zoom != 0f) {
+                location.lat =  event.lat
+                location.lng = event.lng
+                location.zoom = event.zoom
+            }
             val launcherIntent = Intent(this, MapActivity::class.java)
                 .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
@@ -145,23 +154,23 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
     }
 
     private fun registerImagePickerCallback() {
-        imageIntentLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { result ->
-                when(result.resultCode){
-                    RESULT_OK -> {
-                        if (result.data != null) {
-                            i("Got Result ${result.data!!.data}")
-                            event.image = result.data!!.data!!
-                            Picasso.get()
-                                .load(event.image)
-                                .into(binding.eventImage)
-                            binding.chooseImage.setText(R.string.change_event_image)
-                        } // end of if
-                    }
-                    RESULT_CANCELED -> { } else -> { }
-                }
+        imageIntentLauncher = registerForActivityResult(
+            ActivityResultContracts.PickVisualMedia()
+        ) {
+            try{
+                contentResolver
+                    .takePersistableUriPermission(it!!,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION )
+                event.image = it // The returned Uri
+                i("IMG :: ${event.image}")
+                Picasso.get()
+                    .load(event.image)
+                    .into(binding.eventImage)
             }
+            catch(e:Exception){
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun registerMapCallback() {
@@ -172,9 +181,11 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
                     RESULT_OK -> {
                         if (result.data != null) {
                             i("Got Location ${result.data.toString()}")
-                            //location = result.data!!.extras?.getParcelable("location",Location::class.java)!!
-                            location = result.data!!.extras?.getParcelable("location")!!
+                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
                             i("Location == $location")
+                            event.lat = location.lat
+                            event.lng = location.lng
+                            event.zoom = location.zoom
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
