@@ -24,6 +24,7 @@ import ie.setu.mobileappdevelopmentca1.databinding.ActivityMainBinding
 import ie.setu.mobileappdevelopmentca1.helpers.showImagePicker
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 import ie.setu.mobileappdevelopmentca1.models.EventModel
+import ie.setu.mobileappdevelopmentca1.models.Location
 import timber.log.Timber.i
 import java.util.Calendar
 
@@ -67,9 +68,6 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
 
         binding.eventCapacity.maxValue = 100
         binding.eventCapacity.minValue = 2
-
-//        val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
-//        mapFragment.getMapAsync(this)
 
         app = application as MainApp
         i("Event Activity started...")
@@ -125,8 +123,9 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
         }
 
         binding.eventLocation.setOnClickListener {
-            i("Set Location Pressed")
+            val location = Location(52.245696, -7.139102, 15f)
             val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
             mapIntentLauncher.launch(launcherIntent)
         }
     }
