@@ -24,6 +24,7 @@ import ie.setu.mobileappdevelopmentca1.databinding.ActivityMainBinding
 import ie.setu.mobileappdevelopmentca1.helpers.showImagePicker
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 import ie.setu.mobileappdevelopmentca1.models.EventModel
+import ie.setu.mobileappdevelopmentca1.models.Location
 import timber.log.Timber.i
 import java.util.Calendar
 
@@ -34,6 +35,8 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
     var edit = false
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     var image: Uri = Uri.EMPTY
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+    var location = Location(52.245696, -7.139102, 15f)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +45,7 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
         setContentView(binding.root)
 
         registerImagePickerCallback()
+        registerMapCallback()
 
         binding.toolbarAdd.title = title
         setSupportActionBar(binding.toolbarAdd)
@@ -66,9 +70,6 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
         binding.eventCapacity.maxValue = 100
         binding.eventCapacity.minValue = 2
 
-//        val mapFragment = supportFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
-//        mapFragment.getMapAsync(this)
-
         app = application as MainApp
         i("Event Activity started...")
 
@@ -84,6 +85,9 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
             Picasso.get()
                 .load(event.image)
                 .into(binding.eventImage)
+            if (event.image != Uri.EMPTY) {
+                binding.chooseImage.setText(R.string.change_event_image)
+            }
         }
 
         binding.btnAdd.setOnClickListener() {
@@ -118,6 +122,12 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
         binding.chooseImage.setOnClickListener {
             showImagePicker(imageIntentLauncher)
         }
+
+        binding.eventLocation.setOnClickListener {
+            val launcherIntent = Intent(this, MapActivity::class.java)
+                .putExtra("location", location)
+            mapIntentLauncher.launch(launcherIntent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -146,6 +156,7 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
                             Picasso.get()
                                 .load(event.image)
                                 .into(binding.eventImage)
+                            binding.chooseImage.setText(R.string.change_event_image)
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
@@ -153,10 +164,21 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
             }
     }
 
-
-//    override fun onMapReady(googleMap: GoogleMap) {
-//        val waterford = LatLng(52.152999, -7.064298)
-//        googleMap.addMarker(MarkerOptions().position(waterford).title("Waterford"))
-//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(waterford, 12f))
-//    }
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+                when (result.resultCode) {
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            i("Got Location ${result.data.toString()}")
+                            //location = result.data!!.extras?.getParcelable("location",Location::class.java)!!
+                            location = result.data!!.extras?.getParcelable("location")!!
+                            i("Location == $location")
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
+    }
 }

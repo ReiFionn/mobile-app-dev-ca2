@@ -16,6 +16,8 @@
     <string name="capacityText">Capacity:</string>
     <string name="button_addImage"> Add Image </string>
     <string name="select_event_image">Select event image</string>
+    <string name="change_event_image">Change event image</string>
+    <string name="button_location">Set Location</string>
 
     <string-array name="event_types">
         <item>Pop</item>
@@ -23,4 +25,5 @@
         <item>Electronic</item>
         <item>Rap</item>
     </string-array>
+    <string name="title_activity_map">MapActivity</string>
 </resources>
