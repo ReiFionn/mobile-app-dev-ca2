@@ -34,6 +34,7 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
     var edit = false
     private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
     var image: Uri = Uri.EMPTY
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +43,7 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
         setContentView(binding.root)
 
         registerImagePickerCallback()
+        registerMapCallback()
 
         binding.toolbarAdd.title = title
         setSupportActionBar(binding.toolbarAdd)
@@ -84,6 +86,9 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
             Picasso.get()
                 .load(event.image)
                 .into(binding.eventImage)
+            if (event.image != Uri.EMPTY) {
+                binding.chooseImage.setText(R.string.change_event_image)
+            }
         }
 
         binding.btnAdd.setOnClickListener() {
@@ -118,6 +123,12 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
         binding.chooseImage.setOnClickListener {
             showImagePicker(imageIntentLauncher)
         }
+
+        binding.eventLocation.setOnClickListener {
+            i("Set Location Pressed")
+            val launcherIntent = Intent(this, MapActivity::class.java)
+            mapIntentLauncher.launch(launcherIntent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -146,6 +157,7 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
                             Picasso.get()
                                 .load(event.image)
                                 .into(binding.eventImage)
+                            binding.chooseImage.setText(R.string.change_event_image)
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }
@@ -153,6 +165,11 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
             }
     }
 
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { i("Map Loaded") }
+    }
 
 //    override fun onMapReady(googleMap: GoogleMap) {
 //        val waterford = LatLng(52.152999, -7.064298)

@@ -55,6 +55,7 @@ class EventJSONStore(val context: Context) : EventStore {
             foundEvent.day = event.day
             foundEvent.type = event.type
             foundEvent.capacity = event.capacity
+            foundEvent.image = event.image
             logAll()
         }
         serialize()
