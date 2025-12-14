@@ -13,7 +13,7 @@ class MainApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-        events = EventJSONStore(applicationContext)
+        events = EventJSONStore(this)
         i("Events started")
     }
 }

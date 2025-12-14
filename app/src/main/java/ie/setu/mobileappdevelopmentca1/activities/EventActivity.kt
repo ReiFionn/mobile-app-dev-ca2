@@ -12,30 +12,24 @@ import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import androidx.core.net.toUri
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import ie.setu.mobileappdevelopmentca1.R
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityMainBinding
-import ie.setu.mobileappdevelopmentca1.helpers.showImagePicker
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 import ie.setu.mobileappdevelopmentca1.models.EventModel
 import ie.setu.mobileappdevelopmentca1.models.Location
 import timber.log.Timber.i
 import java.util.Calendar
 
-class EventActivity : AppCompatActivity() { //OnMapReadyCallback
+class EventActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     var event = EventModel()
     lateinit var app : MainApp
     var edit = false
     private lateinit var imageIntentLauncher : ActivityResultLauncher<PickVisualMediaRequest>
-    var image: Uri = Uri.EMPTY
+    var image = ""
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
 
 
@@ -141,14 +135,17 @@ class EventActivity : AppCompatActivity() { //OnMapReadyCallback
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_event, menu)
+        if (edit) menu.getItem(0).isVisible = true
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.item_cancel -> {
+            R.id.item_delete -> {
+                setResult(99)
+                app.events.delete(event)
                 finish()
-            }
+            }        R.id.item_cancel -> { finish() }
         }
         return super.onOptionsItemSelected(item)
     }
