@@ -5,12 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityEventMapsBinding
 import ie.setu.mobileappdevelopmentca1.databinding.ContentEventMapsBinding
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 
-class EventMapsActivity : AppCompatActivity() {
+class EventMapsActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
 
     private lateinit var binding: ActivityEventMapsBinding
     private lateinit var contentBinding: ContentEventMapsBinding
@@ -62,11 +63,18 @@ class EventMapsActivity : AppCompatActivity() {
 
     private fun configureMap() {
         map.uiSettings.isZoomControlsEnabled = true
+        map.setOnMarkerClickListener(this)
         app.events.findAll().forEach {
             val loc = LatLng(it.lat, it.lng)
             val options = MarkerOptions().title(it.title).position(loc)
             map.addMarker(options)?.tag = it.id
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.zoom))
         }
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        contentBinding.currentTitle.text = marker.title
+
+        return false
     }
 }
