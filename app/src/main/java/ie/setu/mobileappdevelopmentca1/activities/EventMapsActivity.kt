@@ -2,11 +2,13 @@ package ie.setu.mobileappdevelopmentca1.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.squareup.picasso.Picasso
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityEventMapsBinding
 import ie.setu.mobileappdevelopmentca1.databinding.ContentEventMapsBinding
 import ie.setu.mobileappdevelopmentca1.main.MainApp
@@ -73,8 +75,12 @@ class EventMapsActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        contentBinding.currentTitle.text = marker.title
-
+        //val event = marker.tag as EventModel
+        val tag = marker.tag as Long
+        val event = app.events.findOne(tag)
+        contentBinding.currentTitle.text = event!!.title
+        contentBinding.currentDescription.text = event.description
+        Picasso.get().load(event.image.toUri()).into(contentBinding.currentImage)
         return false
     }
 }
