@@ -18,6 +18,7 @@ class EventListActivity : AppCompatActivity(), EventListener {
     lateinit var app: MainApp
     private lateinit var binding: ActivityEventListBinding
     private lateinit var adapter: EventAdapter
+    private var position: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +58,18 @@ class EventListActivity : AppCompatActivity(), EventListener {
                 val launcherIntent = Intent(this, EventActivity::class.java)
                 getResult.launch(launcherIntent)
             }
+            R.id.item_map -> {
+                val launcherIntent = Intent(this, EventMapsActivity::class.java)
+                mapIntentLauncher.launch(launcherIntent)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private val mapIntentLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        )    { }
 
     private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
@@ -67,9 +77,10 @@ class EventListActivity : AppCompatActivity(), EventListener {
         }
     }
 
-    override fun onEventClick(event: EventModel) {
+    override fun onEventClick(event: EventModel, pos: Int) {
         val launcherIntent = Intent(this, EventActivity::class.java)
-        launcherIntent.putExtra("event_edit", event)
+        launcherIntent.putExtra("placemark_edit", event)
+        position = pos
         getClickResult.launch(launcherIntent)
     }
 
@@ -80,10 +91,15 @@ class EventListActivity : AppCompatActivity(), EventListener {
     }
 
     private val getClickResult =
-        registerForActivityResult (ActivityResultContracts.StartActivityForResult()) {
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
             if (it.resultCode == RESULT_OK) {
-                (binding.recyclerView.adapter)?.notifyItemRangeChanged(0, app.events.findAll().size)
+                (binding.recyclerView.adapter)?.
+                notifyItemRangeChanged(0,app.events.findAll().size)
             }
+            else // Deleting
+                if (it.resultCode == 99)     (binding.recyclerView.adapter)?.notifyItemRemoved(position)
         }
 
     private fun handleSearch(query: String?) {

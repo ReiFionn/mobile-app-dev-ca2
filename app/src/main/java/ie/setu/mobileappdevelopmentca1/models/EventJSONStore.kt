@@ -1,11 +1,19 @@
 package ie.setu.mobileappdevelopmentca1.models
 
 import android.content.Context
+import android.net.Uri
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
 
 import ie.setu.mobileappdevelopmentca1.helpers.*
+import java.lang.reflect.Type
 import java.util.*
 
 val JSON_FILE = "events.json"
@@ -56,6 +64,9 @@ class EventJSONStore(val context: Context) : EventStore {
             foundEvent.type = event.type
             foundEvent.capacity = event.capacity
             foundEvent.image = event.image
+            foundEvent.lat = event.lat
+            foundEvent.lng = event.lng
+            foundEvent.zoom = event.zoom
             logAll()
         }
         serialize()
@@ -82,5 +93,23 @@ class EventJSONStore(val context: Context) : EventStore {
     private fun deserialize() {
         val jsonString = read(context,JSON_FILE)
         events = Gson().fromJson(jsonString, listType)
+    }
+}
+
+class UriParser : JsonDeserializer<Uri>, JsonSerializer<Uri> {
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): Uri {
+        return Uri.parse(json?.asString)
+    }
+
+    override fun serialize(
+        src: Uri?,
+        typeOfSrc: Type?,
+        context: JsonSerializationContext?
+    ): JsonElement {
+        return JsonPrimitive(src.toString())
     }
 }

@@ -14,7 +14,10 @@ data class EventModel (
     var day: Int = 0,
     var type: String = "",
     var capacity: Int = 0,
-    var image: Uri = Uri.EMPTY
+    var image: Uri = Uri.EMPTY,
+    var lat : Double = 0.0,
+    var lng: Double = 0.0,
+    var zoom: Float = 0f
 ) : Parcelable
 
 @Parcelize

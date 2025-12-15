@@ -1,14 +1,16 @@
 package ie.setu.mobileappdevelopmentca1.adapters
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import ie.setu.mobileappdevelopmentca1.databinding.CardEventBinding
 import ie.setu.mobileappdevelopmentca1.models.EventModel
+import androidx.core.net.toUri
 
 interface EventListener {
-    fun onEventClick(event: EventModel)
+    fun onEventClick(event: EventModel, position : Int)
     fun onDeleteButtonClicked(event: EventModel)
 }
 
@@ -51,7 +53,7 @@ class EventAdapter (private var events: List<EventModel>, private val listener: 
             binding.eventCapacity.text = capacityText
             binding.btnDelete.setOnClickListener { listener.onDeleteButtonClicked(event) }
             Picasso.get().load(event.image).resize(200,200).into(binding.imageIcon)
-            binding.root.setOnClickListener { listener.onEventClick(event) }
+            binding.root.setOnClickListener { listener.onEventClick(event,adapterPosition) }
         }
     }
 }

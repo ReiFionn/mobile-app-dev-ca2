@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.picasso)
 
     implementation(libs.timber)
+    implementation(libs.androidx.cardview)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
