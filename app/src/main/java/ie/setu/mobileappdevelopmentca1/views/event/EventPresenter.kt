@@ -1,13 +1,12 @@
-package ie.setu.mobileappdevelopmentca1.activities
+package ie.setu.mobileappdevelopmentca1.views.event
 
-import EventView
-import android.app.Activity.RESULT_OK
+import android.app.Activity
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
+import ie.setu.mobileappdevelopmentca1.views.editLocation.EditLocationView
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 import ie.setu.mobileappdevelopmentca1.models.EventModel
 import ie.setu.mobileappdevelopmentca1.models.Location
@@ -21,7 +20,7 @@ class EventPresenter(private val view: EventView) {
     private lateinit var imageIntentLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var mapIntentLauncher: ActivityResultLauncher<Intent>
 
-    private var edit = false
+    var edit = false
 
     init {
         if (view.intent.hasExtra("event_edit")) {
@@ -40,7 +39,7 @@ class EventPresenter(private val view: EventView) {
 
         if (edit) app.events.update(event) else app.events.create(event)
 
-        view.setResult(RESULT_OK)
+        view.setResult(Activity.RESULT_OK)
         view.finish()
     }
 

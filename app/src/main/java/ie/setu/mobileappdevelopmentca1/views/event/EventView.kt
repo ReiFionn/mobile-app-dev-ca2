@@ -1,3 +1,5 @@
+package ie.setu.mobileappdevelopmentca1.views.event
+
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -7,10 +9,10 @@ import androidx.core.net.toUri
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import ie.setu.mobileappdevelopmentca1.R
-import ie.setu.mobileappdevelopmentca1.activities.EventPresenter
+import ie.setu.mobileappdevelopmentca1.views.event.EventPresenter
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityMainBinding
 import ie.setu.mobileappdevelopmentca1.models.EventModel
-import timber.log.Timber.i
+import timber.log.Timber
 
 class EventView : AppCompatActivity() {
 
@@ -83,7 +85,7 @@ class EventView : AppCompatActivity() {
     }
 
     fun updateImage(image: Uri){
-        i("Image updated")
+        Timber.i("Image updated")
         Picasso.get()
             .load(image)
             .into(binding.eventImage)

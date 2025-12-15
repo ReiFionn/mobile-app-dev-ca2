@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Event"
         tools:targetApi="34">
         <activity
-            android:name=".activities.EventMapsActivity"
+            android:name=".views.map.EventMapView"
             android:exported="false"
             android:theme="@style/Theme.Event" />
 
@@ -26,11 +26,11 @@
             android:value="@string/MAPS_API_KEY" />
 
         <activity
-            android:name=".activities.MapActivity"
+            android:name=".views.editLocation.EditLocationView"
             android:exported="false"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".activities.EventListView"
+            android:name=".views.eventList.EventListView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +42,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".activities.EventView">
+        <activity android:name=".views.event.EventView">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

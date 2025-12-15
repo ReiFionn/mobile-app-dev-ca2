@@ -1,4 +1,4 @@
-package org.wit.placemark.views.placemarklist
+package ie.setu.mobileappdevelopmentca1.views.eventList
 
 import android.os.Bundle
 import android.view.Menu
@@ -6,8 +6,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.setu.mobileappdevelopmentca1.R
-import ie.setu.mobileappdevelopmentca1.activities.EventListPresenter
 import ie.setu.mobileappdevelopmentca1.adapters.EventAdapter
+import ie.setu.mobileappdevelopmentca1.adapters.EventListener
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityEventListBinding
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 import ie.setu.mobileappdevelopmentca1.models.EventModel
@@ -49,6 +49,10 @@ class EventListView : AppCompatActivity(), EventListener {
     override fun onEventClick(event: EventModel, position: Int) {
         this.position = position
         presenter.doEditEvent(event, this.position)
+    }
+
+    override fun onDeleteButtonClicked(event: EventModel) {
+        presenter.doDeleteEvent(event)
     }
 
     private fun loadEvents() {

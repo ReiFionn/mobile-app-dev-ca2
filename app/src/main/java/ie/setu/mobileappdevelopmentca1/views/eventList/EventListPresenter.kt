@@ -1,11 +1,13 @@
-package ie.setu.mobileappdevelopmentca1.activities
+package ie.setu.mobileappdevelopmentca1.views.eventList
 
-import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import ie.setu.mobileappdevelopmentca1.views.map.EventMapView
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 import ie.setu.mobileappdevelopmentca1.models.EventModel
+import ie.setu.mobileappdevelopmentca1.views.event.EventView
 
 class EventListPresenter(val view: EventListView) {
 
@@ -35,7 +37,7 @@ class EventListPresenter(val view: EventListView) {
     }
 
     fun doShowEventsMap() {
-        val launcherIntent = Intent(view, EventMapsActivity::class.java)
+        val launcherIntent = Intent(view, EventMapView::class.java)
         mapIntentLauncher.launch(launcherIntent)
     }
 
@@ -53,5 +55,10 @@ class EventListPresenter(val view: EventListView) {
         mapIntentLauncher =
             view.registerForActivityResult(ActivityResultContracts.StartActivityForResult())
             {  }
+    }
+
+    fun doDeleteEvent(event: EventModel) {
+        app.events.delete(event)
+        view.onRefresh()
     }
 }
