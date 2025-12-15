@@ -42,7 +42,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".activities.EventActivity">
+        <activity android:name=".activities.EventView">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

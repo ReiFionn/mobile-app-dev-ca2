@@ -55,7 +55,7 @@ class EventListActivity : AppCompatActivity(), EventListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_add -> {
-                val launcherIntent = Intent(this, EventActivity::class.java)
+                val launcherIntent = Intent(this, EventView::class.java)
                 getResult.launch(launcherIntent)
             }
             R.id.item_map -> {
@@ -78,7 +78,7 @@ class EventListActivity : AppCompatActivity(), EventListener {
     }
 
     override fun onEventClick(event: EventModel, pos: Int) {
-        val launcherIntent = Intent(this, EventActivity::class.java)
+        val launcherIntent = Intent(this, EventView::class.java)
         launcherIntent.putExtra("placemark_edit", event)
         position = pos
         getClickResult.launch(launcherIntent)

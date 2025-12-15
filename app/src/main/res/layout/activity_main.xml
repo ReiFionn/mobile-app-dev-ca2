@@ -5,9 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ie.setu.mobileappdevelopmentca1.activities.EventActivity">
+    tools:context="ie.setu.mobileappdevelopmentca1.activities.EventView">
 
-    <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout2"
         android:layout_width="0dp"
@@ -27,7 +26,6 @@
             app:titleTextColor="@color/colorPrimary"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Content -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/content"
         android:layout_width="0dp"
@@ -115,7 +113,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Buttons under DatePicker -->
         <Button
             android:id="@+id/chooseImage"
             android:layout_width="0dp"
@@ -138,7 +135,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"/>
 
-        <!-- Add Event under both buttons -->
         <Button
             android:id="@+id/btnAdd"
             android:layout_width="0dp"
@@ -149,7 +145,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Large Image -->
         <ImageView
             android:id="@+id/eventImage"
             android:layout_width="0dp"
