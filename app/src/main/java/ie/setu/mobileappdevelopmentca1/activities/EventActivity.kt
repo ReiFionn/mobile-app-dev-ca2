@@ -77,9 +77,9 @@ class EventActivity : AppCompatActivity() {
             binding.eventCapacity.value = event.capacity
             binding.btnAdd.setText(R.string.save_event)
             Picasso.get()
-                .load(event.image)
+                .load(event.image.toUri())
                 .into(binding.eventImage)
-            if (event.image != Uri.EMPTY) {
+            if (event.image.toUri() != Uri.EMPTY) {
                 binding.chooseImage.setText(R.string.change_event_image)
             }
         }
@@ -153,18 +153,23 @@ class EventActivity : AppCompatActivity() {
     private fun registerImagePickerCallback() {
         imageIntentLauncher = registerForActivityResult(
             ActivityResultContracts.PickVisualMedia()
-        ) {
-            try{
-                contentResolver
-                    .takePersistableUriPermission(it!!,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION )
-                event.image = it // The returned Uri
+        ) { uri ->
+            if (uri == null) return@registerForActivityResult
+
+            try {
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+
+                event.image = uri.toString()
                 i("IMG :: ${event.image}")
+
                 Picasso.get()
-                    .load(event.image)
+                    .load(uri)
                     .into(binding.eventImage)
-            }
-            catch(e:Exception){
+
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
