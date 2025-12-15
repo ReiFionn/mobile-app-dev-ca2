@@ -52,7 +52,7 @@ class EventAdapter (private var events: List<EventModel>, private val listener: 
             binding.eventType.text = event.type
             binding.eventCapacity.text = capacityText
             binding.btnDelete.setOnClickListener { listener.onDeleteButtonClicked(event) }
-            Picasso.get().load(event.image).resize(200,200).into(binding.imageIcon)
+            Picasso.get().load(event.image.toUri()).resize(200,200).into(binding.imageIcon)
             binding.root.setOnClickListener { listener.onEventClick(event,adapterPosition) }
         }
     }

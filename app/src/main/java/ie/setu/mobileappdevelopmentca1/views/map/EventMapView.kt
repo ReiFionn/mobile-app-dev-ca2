@@ -1,39 +1,50 @@
-package ie.setu.mobileappdevelopmentca1.activities
+package ie.setu.mobileappdevelopmentca1.views.map
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.maps.CameraUpdateFactory
+import androidx.core.net.toUri
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.squareup.picasso.Picasso
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityEventMapsBinding
 import ie.setu.mobileappdevelopmentca1.databinding.ContentEventMapsBinding
 import ie.setu.mobileappdevelopmentca1.main.MainApp
+import ie.setu.mobileappdevelopmentca1.models.EventModel
 
-class EventMapsActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
+class EventMapView : AppCompatActivity() , GoogleMap.OnMarkerClickListener{
 
     private lateinit var binding: ActivityEventMapsBinding
     private lateinit var contentBinding: ContentEventMapsBinding
-    lateinit var map: GoogleMap
     lateinit var app: MainApp
+    lateinit var presenter: EventMapPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         app = application as MainApp
-
         binding = ActivityEventMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        contentBinding = ContentEventMapsBinding.bind(binding.root)
-        contentBinding.mapView.onCreate(savedInstanceState)
+        presenter = EventMapPresenter(this)
 
-        contentBinding.mapView.getMapAsync {
-            map = it
-            configureMap()
+        contentBinding = ContentEventMapsBinding.bind(binding.root)
+
+        contentBinding.mapView.onCreate(savedInstanceState)
+        contentBinding.mapView.getMapAsync{
+            presenter.doPopulateMap(it)
         }
+    }
+    fun showEvent(event: EventModel) {
+        contentBinding.currentTitle.text = event.title
+        contentBinding.currentDescription.text = event.description
+        Picasso.get()
+            .load(event.image.toUri())
+            .into(contentBinding.currentImage)
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        presenter.doMarkerSelected(marker)
+        return true
     }
 
     override fun onDestroy() {
@@ -59,22 +70,5 @@ class EventMapsActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         contentBinding.mapView.onSaveInstanceState(outState)
-    }
-
-    private fun configureMap() {
-        map.uiSettings.isZoomControlsEnabled = true
-        map.setOnMarkerClickListener(this)
-        app.events.findAll().forEach {
-            val loc = LatLng(it.lat, it.lng)
-            val options = MarkerOptions().title(it.title).position(loc)
-            map.addMarker(options)?.tag = it.id
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.zoom))
-        }
-    }
-
-    override fun onMarkerClick(marker: Marker): Boolean {
-        contentBinding.currentTitle.text = marker.title
-
-        return false
     }
 }
