@@ -3,6 +3,7 @@ package ie.setu.mobileappdevelopmentca1.views.eventList
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.setu.mobileappdevelopmentca1.R
@@ -52,7 +53,14 @@ class EventListView : AppCompatActivity(), EventListener {
     }
 
     override fun onDeleteButtonClicked(event: EventModel) {
-        presenter.doDeleteEvent(event)
+        AlertDialog.Builder(this)
+            .setTitle("Delete event")
+            .setMessage("Are you sure you want to delete this event?")
+            .setPositiveButton("Delete") { _, _ ->
+                presenter.doDeleteEvent(event)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun loadEvents() {
