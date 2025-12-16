@@ -61,11 +61,6 @@ class EventListView : AppCompatActivity(), EventListener {
     }
 
     fun onRefresh() {
-        binding.recyclerView.adapter?.
-        notifyItemRangeChanged(0,presenter.getEvents().size)
-    }
-
-    fun onDelete(position : Int) {
-        binding.recyclerView.adapter?.notifyItemRemoved(position)
+        (binding.recyclerView.adapter as EventAdapter).submitList(presenter.getEvents().toList())
     }
 }

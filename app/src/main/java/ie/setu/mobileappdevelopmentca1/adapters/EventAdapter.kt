@@ -1,5 +1,6 @@
 package ie.setu.mobileappdevelopmentca1.adapters
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -45,6 +46,7 @@ class EventAdapter (private var events: List<EventModel>, private val listener: 
         fun bind(event: EventModel, listener: EventListener) {
             val dateText = "${event.day}/${event.month}/${event.year}"
             val capacityText = "Capacity: ${event.capacity}"
+            val locationText = "${event.lat}, ${event.lng}"
 
             binding.eventTitle.text = event.title
             binding.eventDescription.text = event.description
@@ -53,6 +55,7 @@ class EventAdapter (private var events: List<EventModel>, private val listener: 
             binding.eventCapacity.text = capacityText
             binding.btnDelete.setOnClickListener { listener.onDeleteButtonClicked(event) }
             Picasso.get().load(event.image.toUri()).resize(200,200).into(binding.imageIcon)
+            binding.eventLocation.text = locationText
             binding.root.setOnClickListener { listener.onEventClick(event,adapterPosition) }
         }
     }

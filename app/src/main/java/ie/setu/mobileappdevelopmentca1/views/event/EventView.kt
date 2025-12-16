@@ -4,6 +4,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.google.android.material.snackbar.Snackbar
@@ -23,11 +25,18 @@ class EventView : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbarAdd.title = title
         setSupportActionBar(binding.toolbarAdd)
+
+        val eventTypes = resources.getStringArray(R.array.event_types)
+        val arrayAdapter = ArrayAdapter(this, R.layout.event_type_dropdown, eventTypes)
+        val eventTypeTV = findViewById<AutoCompleteTextView>(R.id.eventType)
+        eventTypeTV.setAdapter(arrayAdapter)
+
+        binding.eventCapacity.maxValue = 500
+        binding.eventCapacity.minValue = 2
 
         presenter = EventPresenter(this)
 
@@ -91,5 +100,4 @@ class EventView : AppCompatActivity() {
             .into(binding.eventImage)
         binding.chooseImage.setText(R.string.change_event_image)
     }
-
 }

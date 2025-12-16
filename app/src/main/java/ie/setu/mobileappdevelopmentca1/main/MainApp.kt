@@ -7,7 +7,6 @@ import timber.log.Timber
 import timber.log.Timber.i
 
 class MainApp : Application() {
-
     lateinit var events: EventJSONStore
 
     override fun onCreate() {

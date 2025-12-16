@@ -46,9 +46,9 @@ class EventListPresenter(val view: EventListView) {
             view.registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) {
-                if (it.resultCode == RESULT_OK) view.onRefresh()
-                else // Deleting
-                    if (it.resultCode == 99) view.onDelete(position)
+                if (it.resultCode == RESULT_OK) {
+                    view.onRefresh()
+                }
             }
     }
     private fun registerMapCallback() {
