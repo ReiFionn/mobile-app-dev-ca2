@@ -61,4 +61,12 @@ class EventListPresenter(val view: EventListView) {
         app.events.delete(event)
         view.onRefresh()
     }
+
+    fun searchByTitle(query: String?): List<EventModel> {
+        val allEvents = app.events.findAll()
+        if (query.isNullOrBlank()) return allEvents
+        return allEvents.filter {
+            it.title.contains(query, ignoreCase = true)
+        }
+    }
 }

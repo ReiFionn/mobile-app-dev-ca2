@@ -26,6 +26,20 @@ class EventListView : AppCompatActivity(), EventListener {
         setContentView(binding.root)
         binding.toolbar.title = title
         setSupportActionBar(binding.toolbar)
+        binding.eventSV.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                handleSearch(newText)
+                return true
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                handleSearch(query)
+                return true
+            }
+        })
+
         presenter = EventListPresenter(this)
         app = application as MainApp
 
@@ -70,5 +84,11 @@ class EventListView : AppCompatActivity(), EventListener {
 
     fun onRefresh() {
         (binding.recyclerView.adapter as EventAdapter).submitList(presenter.getEvents().toList())
+    }
+
+    fun handleSearch(query: String?) {
+        val filtered = presenter.searchByTitle(query)
+        (binding.recyclerView.adapter as EventAdapter)
+            .submitList(filtered.toList())
     }
 }
