@@ -28,4 +28,5 @@
         <item>Rap</item>
     </string-array>
     <string name="title_activity_map">MapActivity</string>
+    <string name="a_location">A Location</string>
 </resources>

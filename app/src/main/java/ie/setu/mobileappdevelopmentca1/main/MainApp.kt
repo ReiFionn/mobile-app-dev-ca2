@@ -2,12 +2,10 @@ package ie.setu.mobileappdevelopmentca1.main
 
 import android.app.Application
 import ie.setu.mobileappdevelopmentca1.models.EventJSONStore
-import ie.setu.mobileappdevelopmentca1.models.EventStore
 import timber.log.Timber
 import timber.log.Timber.i
 
 class MainApp : Application() {
-
     lateinit var events: EventJSONStore
 
     override fun onCreate() {

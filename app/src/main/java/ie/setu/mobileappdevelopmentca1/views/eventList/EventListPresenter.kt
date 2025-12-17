@@ -11,13 +11,12 @@ import ie.setu.mobileappdevelopmentca1.views.event.EventView
 
 class EventListPresenter(val view: EventListView) {
 
-    var app: MainApp
+    var app: MainApp = view.application as MainApp
     private lateinit var refreshIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private var position: Int = 0
 
     init {
-        app = view.application as MainApp
         registerMapCallback()
         registerRefreshCallback()
     }
@@ -46,9 +45,9 @@ class EventListPresenter(val view: EventListView) {
             view.registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) {
-                if (it.resultCode == RESULT_OK) view.onRefresh()
-                else // Deleting
-                    if (it.resultCode == 99) view.onDelete(position)
+                if (it.resultCode == RESULT_OK) {
+                    view.onRefresh()
+                }
             }
     }
     private fun registerMapCallback() {
@@ -60,5 +59,13 @@ class EventListPresenter(val view: EventListView) {
     fun doDeleteEvent(event: EventModel) {
         app.events.delete(event)
         view.onRefresh()
+    }
+
+    fun searchByTitle(query: String?): List<EventModel> {
+        val allEvents = app.events.findAll()
+        if (query.isNullOrBlank()) return allEvents
+        return allEvents.filter {
+            it.title.contains(query, ignoreCase = true)
+        }
     }
 }

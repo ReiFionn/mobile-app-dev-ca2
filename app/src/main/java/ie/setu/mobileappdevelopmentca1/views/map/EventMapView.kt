@@ -1,7 +1,12 @@
 package ie.setu.mobileappdevelopmentca1.views.map
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
@@ -17,6 +22,7 @@ class EventMapView : AppCompatActivity() , GoogleMap.OnMarkerClickListener{
     private lateinit var contentBinding: ContentEventMapsBinding
     lateinit var app: MainApp
     lateinit var presenter: EventMapPresenter
+    private lateinit var map: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +36,35 @@ class EventMapView : AppCompatActivity() , GoogleMap.OnMarkerClickListener{
         contentBinding = ContentEventMapsBinding.bind(binding.root)
 
         contentBinding.mapView.onCreate(savedInstanceState)
-        contentBinding.mapView.getMapAsync{
-            presenter.doPopulateMap(it)
+        contentBinding.mapView.getMapAsync{ googleMap ->
+            map = googleMap
+            presenter.doPopulateMap(map)
+            enableMyLocation()
         }
+    }
+
+    private fun enableMyLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            map.isMyLocationEnabled = true
+        } else {
+            requestLocationPermission()
+        }
+    }
+
+    private val locationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                map.isMyLocationEnabled = true
+                getSystemService(LOCATION_SERVICE) as LocationManager
+            }
+        }
+
+    private fun requestLocationPermission() {
+        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
     fun showEvent(event: EventModel) {
         contentBinding.currentTitle.text = event.title

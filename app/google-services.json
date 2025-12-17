@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "828121531298",
+    "project_id": "madca2-1e432",
+    "storage_bucket": "madca2-1e432.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828121531298:android:b8019818dcde4558ffa8fb",
+        "android_client_info": {
+          "package_name": "ie.setu.mobileappdevelopmentca1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7YezeQ8NekUfnaClcZ3q7Aj8Eevp3rCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

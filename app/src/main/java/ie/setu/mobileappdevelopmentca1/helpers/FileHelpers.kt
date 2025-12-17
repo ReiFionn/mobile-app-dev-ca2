@@ -14,7 +14,7 @@ fun write(context: Context, fileName: String, data: String) {
         outputStreamWriter.write(data)
         outputStreamWriter.close()
     } catch (e: Exception) {
-        logger.error { "Cannot read file: " + e.toString() }
+        logger.error { "Cannot read file: $e" }
     }
 }
 

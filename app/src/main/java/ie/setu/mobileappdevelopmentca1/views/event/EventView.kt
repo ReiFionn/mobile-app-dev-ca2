@@ -4,12 +4,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import ie.setu.mobileappdevelopmentca1.R
-import ie.setu.mobileappdevelopmentca1.views.event.EventPresenter
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityMainBinding
 import ie.setu.mobileappdevelopmentca1.models.EventModel
 import timber.log.Timber
@@ -23,11 +24,18 @@ class EventView : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.toolbarAdd.title = title
         setSupportActionBar(binding.toolbarAdd)
+
+        val eventTypes = resources.getStringArray(R.array.event_types)
+        val arrayAdapter = ArrayAdapter(this, R.layout.event_type_dropdown, eventTypes)
+        val eventTypeTV = findViewById<AutoCompleteTextView>(R.id.eventType)
+        eventTypeTV.setAdapter(arrayAdapter)
+
+        binding.eventCapacity.maxValue = 500
+        binding.eventCapacity.minValue = 2
 
         presenter = EventPresenter(this)
 
@@ -41,13 +49,31 @@ class EventView : AppCompatActivity() {
             presenter.doSetLocation()
         }
 
+        var dateSelected = false
+
+        binding.eventDate.setOnDateChangedListener { _, _, _, _ ->
+            dateSelected = true
+        }
+
         binding.btnAdd.setOnClickListener {
-            if (binding.eventTitle.text.toString().isEmpty()) {
-                Snackbar.make(binding.root, R.string.hint_eventTitle , Snackbar.LENGTH_LONG)
+            if (binding.eventTitle.text.toString().isEmpty() ||
+                binding.eventDescription.text.toString().isEmpty() ||
+                binding.eventType.text.toString().isEmpty() ||
+                binding.eventCapacity.value <= 0 ||
+                binding.locationText.text.toString() == "No location selected" ||
+                !dateSelected ||
+                !imageSelected) {
+                Snackbar.make(binding.root, R.string.enter_event_details , Snackbar.LENGTH_LONG)
                     .show()
             } else {
                 // presenter.cachePlacemark(binding.eventTitle.text.toString(), binding.eventDescription.text.toString())
-                presenter.doAddOrSave(binding.eventTitle.text.toString(), binding.eventDescription.text.toString())
+                presenter.doAddOrSave(binding.eventTitle.text.toString(),
+                    binding.eventDescription.text.toString(),
+                    binding.eventDate.year,
+                    binding.eventDate.month,
+                    binding.eventDate.dayOfMonth,
+                    binding.eventType.text.toString(),
+                    binding.eventCapacity.value)
             }
         }
     }
@@ -81,8 +107,10 @@ class EventView : AppCompatActivity() {
         if (event.image.toUri() != Uri.EMPTY) {
             binding.chooseImage.setText(R.string.change_event_image)
         }
-
+        binding.locationText.text = "${event.lat%.5f}, ${event.lng%.5f}"
     }
+
+    private var imageSelected = false
 
     fun updateImage(image: Uri){
         Timber.i("Image updated")
@@ -90,6 +118,10 @@ class EventView : AppCompatActivity() {
             .load(image)
             .into(binding.eventImage)
         binding.chooseImage.setText(R.string.change_event_image)
+        imageSelected = true
     }
 
+    fun updateLocationText(lat: Double, lng: Double) {
+        binding.locationText.text = "Location: %.5f, %.5f".format(lat, lng)
+    }
 }

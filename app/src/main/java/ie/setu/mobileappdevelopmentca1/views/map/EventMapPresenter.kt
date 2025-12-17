@@ -8,14 +8,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 
 class EventMapPresenter(val view: EventMapView) {
-    var app: MainApp
-
-    init {
-        app = view.application as MainApp
-    }
+    var app: MainApp = view.application as MainApp
 
     fun doPopulateMap(map: GoogleMap) {
-        map.uiSettings.setZoomControlsEnabled(true)
+        map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener(view)
         app.events.findAll().forEach {
             val loc = LatLng(it.lat, it.lng)
