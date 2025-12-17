@@ -7,6 +7,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
@@ -20,6 +22,9 @@ import ie.setu.mobileappdevelopmentca1.models.EventModel
 import ie.setu.mobileappdevelopmentca1.views.auth.AuthView
 import ie.setu.mobileappdevelopmentca1.views.event.EventView
 import ie.setu.mobileappdevelopmentca1.views.map.EventMapView
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class EventListView : AppCompatActivity(), EventListener {
 
@@ -32,6 +37,7 @@ class EventListView : AppCompatActivity(), EventListener {
         super.onCreate(savedInstanceState)
         binding = ActivityEventListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         binding.toolbar.title = title
         setSupportActionBar(binding.toolbar)
         binding.eventSV.setOnQueryTextListener(object :
@@ -71,6 +77,11 @@ class EventListView : AppCompatActivity(), EventListener {
                     FirebaseAuth.getInstance().signOut()
                     startActivity(Intent(this, AuthView::class.java))
                 }
+                R.id.nav_dark_mode -> {
+                   if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                   } else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
             }
             drawerLayout.closeDrawers()
             true
@@ -90,13 +101,13 @@ class EventListView : AppCompatActivity(), EventListener {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.item_add -> { presenter.doAddEvent() }
-            R.id.item_map -> { presenter.doShowEventsMap() }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.item_add -> { presenter.doAddEvent() }
+//            R.id.item_map -> { presenter.doShowEventsMap() }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     override fun onEventClick(id: String, event: EventModel) {
         presenter.doEditEvent(id, event)

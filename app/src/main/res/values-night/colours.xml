@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#E6F1F4</color>
+    <color name="white">#0F1216</color>
+    <color name="colorPrimary">#2E245C</color>
+    <color name="colorPrimaryDark">#0B061A</color>
+    <color name="colorAccent">#8F8AC7</color>
+    <color name="date">#D06A8C</color>
+</resources>
+
+<!--    https://www.geeksforgeeks.org/android/how-to-implement-dark-night-mode-in-android-app/-->

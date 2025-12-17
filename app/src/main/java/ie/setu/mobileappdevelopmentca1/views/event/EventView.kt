@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.google.android.material.snackbar.Snackbar
@@ -88,7 +89,14 @@ class EventView : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_delete -> {
-                presenter.doDelete()
+                AlertDialog.Builder(this)
+                    .setTitle("Delete event")
+                    .setMessage("Are you sure you want to delete this event?")
+                    .setPositiveButton("Delete") { _, _ ->
+                        presenter.doDelete()
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
             }
             R.id.item_cancel -> {
                 presenter.doCancel()

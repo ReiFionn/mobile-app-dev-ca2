@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import androidx.drawerlayout.widget.DrawerLayout
@@ -61,6 +62,11 @@ class EventMapView : AppCompatActivity() , GoogleMap.OnMarkerClickListener{
                 R.id.nav_sign_out -> {
                     FirebaseAuth.getInstance().signOut()
                     startActivity(Intent(this, AuthView::class.java))
+                }
+                R.id.nav_dark_mode -> {
+                    if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    } else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
             }
             drawerLayout.closeDrawers()
