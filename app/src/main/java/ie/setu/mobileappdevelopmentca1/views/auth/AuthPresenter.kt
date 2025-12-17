@@ -31,4 +31,8 @@ class AuthPresenter(private val view: AuthView) {
             view.showError(it.message ?: "Sign up failed")
         }
     }
+
+    fun signOut() {
+        auth.signOut()
+    }
 }

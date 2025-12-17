@@ -20,6 +20,8 @@
     <string name="button_location">Set Location</string>
     <string name="menu_deleteEvent">Delete</string>
     <string name="title_activity_event_maps">Map of All Events</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
 
     <string-array name="event_types">
         <item>Pop</item>

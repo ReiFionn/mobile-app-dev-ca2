@@ -1,17 +1,25 @@
 package ie.setu.mobileappdevelopmentca1.views.eventList
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import ie.setu.mobileappdevelopmentca1.R
 import ie.setu.mobileappdevelopmentca1.adapters.EventAdapter
 import ie.setu.mobileappdevelopmentca1.adapters.EventListener
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityEventListBinding
 import ie.setu.mobileappdevelopmentca1.main.MainApp
 import ie.setu.mobileappdevelopmentca1.models.EventModel
+import ie.setu.mobileappdevelopmentca1.views.auth.AuthView
+import ie.setu.mobileappdevelopmentca1.views.event.EventView
+import ie.setu.mobileappdevelopmentca1.views.map.EventMapView
 
 class EventListView : AppCompatActivity(), EventListener {
 
@@ -39,6 +47,34 @@ class EventListView : AppCompatActivity(), EventListener {
                 return true
             }
         })
+
+        //https://www.geeksforgeeks.org/android/navigation-drawer-in-android/
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+        val navView = findViewById<NavigationView>(R.id.navView)
+
+        val toggle = ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.nav_open, R.string.nav_close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when(menuItem.itemId) {
+                R.id.nav_create_event -> {
+                    startActivity(Intent(this, EventView::class.java))
+                }
+                R.id.nav_view_events -> {
+                    startActivity(Intent(this, EventListView::class.java))
+                }
+                R.id.nav_view_events_map -> {
+                    startActivity(Intent(this, EventMapView::class.java))
+                }
+                R.id.nav_sign_out -> {
+                    FirebaseAuth.getInstance().signOut()
+                    startActivity(Intent(this, AuthView::class.java))
+                }
+            }
+            drawerLayout.closeDrawers()
+            true
+        }
 
         presenter = EventListPresenter(this)
         app = application as MainApp
