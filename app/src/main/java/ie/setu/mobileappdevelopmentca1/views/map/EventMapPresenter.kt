@@ -13,17 +13,17 @@ class EventMapPresenter(val view: EventMapView) {
     fun doPopulateMap(map: GoogleMap) {
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener(view)
-        app.events.findAll().forEach {
-            val loc = LatLng(it.lat, it.lng)
-            val options = MarkerOptions().title(it.title).position(loc)
-            map.addMarker(options)?.tag = it.id
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.zoom))
+        app.events.findAllPairs().forEach { (id, event) ->
+            val loc = LatLng(event.lat, event.lng)
+            val options = MarkerOptions().title(event.title).position(loc)
+            map.addMarker(options)?.tag = id
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, event.zoom))
         }
     }
 
     fun doMarkerSelected(marker: Marker) {
-        val tag = marker.tag as Long
-        val event = app.events.findOne(tag)
+        val tag = marker.tag as? String ?: return
+        val event = app.events.findById(tag)
         if (event != null) view.showEvent(event)
     }
 }

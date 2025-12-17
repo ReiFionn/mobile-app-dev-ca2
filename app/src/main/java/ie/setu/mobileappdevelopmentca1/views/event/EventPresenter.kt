@@ -1,6 +1,7 @@
 package ie.setu.mobileappdevelopmentca1.views.event
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
@@ -28,11 +29,13 @@ class EventPresenter(private val view: EventView) {
     private lateinit var galleryLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
     private lateinit var cameraImageUri: Uri
+    private var id: String? = null
 
     init {
         if (view.intent.hasExtra("event_edit")) {
             edit = true
             event = view.intent.extras?.getParcelable("event_edit")!!
+            id = view.intent.getStringExtra("event_id")
             view.showEvent(event)
         }
 
@@ -50,7 +53,28 @@ class EventPresenter(private val view: EventView) {
         event.type = type
         event.capacity = capacity
 
-        if (edit) app.events.update(event) else app.events.create(event)
+        if (edit) {
+            val eventId = id ?: return
+            app.events.update(eventId, event,
+                onDone = {
+                    view.setResult(RESULT_OK)
+                    view.finish()
+                },
+                onError = {
+
+                }
+            )
+        } else {
+            app.events.create(event,
+                onDone = {
+                    view.setResult(RESULT_OK)
+                    view.finish()
+                },
+                onError = {
+
+                }
+            )
+        }
 
         view.setResult(Activity.RESULT_OK)
         view.finish()
@@ -59,9 +83,13 @@ class EventPresenter(private val view: EventView) {
     fun doCancel() = view.finish()
 
     fun doDelete() {
-        view.setResult(99)
-        app.events.delete(event)
-        view.finish()
+        val id = id ?: return
+        app.events.delete(id, onDone = {
+            view.setResult(99)
+            view.finish()
+        }, onError = {
+
+        })
     }
 
 //    fun doSelectImage() {

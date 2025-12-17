@@ -10,11 +10,11 @@ import androidx.core.net.toUri
 import ie.setu.mobileappdevelopmentca1.R
 
 interface EventListener {
-    fun onEventClick(event: EventModel, position : Int)
-    fun onDeleteButtonClicked(event: EventModel)
+    fun onEventClick(id: String, event: EventModel)
+    fun onDeleteButtonClicked(id: String, event: EventModel)
 }
 
-class EventAdapter (events: List<EventModel>, private val listener: EventListener) :
+class EventAdapter (events: List<Pair<String,EventModel>>, private val listener: EventListener) : //https://www.baeldung.com/kotlin/pair-class
     RecyclerView.Adapter<EventAdapter.MainHolder>() {
 
         private val displayedEvents = events.toMutableList()
@@ -27,13 +27,13 @@ class EventAdapter (events: List<EventModel>, private val listener: EventListene
     }
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        val event = displayedEvents[holder.adapterPosition]
-        holder.bind(event, listener)
+        val (id, event) = displayedEvents[holder.adapterPosition]
+        holder.bind(id, event, listener)
     }
 
     override fun getItemCount(): Int = displayedEvents.size
 
-    fun submitList(newList: List<EventModel>) {
+    fun submitList(newList: List<Pair<String, EventModel>>) {
         displayedEvents.clear()
         displayedEvents.addAll(newList)
         notifyDataSetChanged()
@@ -42,7 +42,7 @@ class EventAdapter (events: List<EventModel>, private val listener: EventListene
     class MainHolder(private val binding: CardEventBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(event: EventModel, listener: EventListener) {
+        fun bind(id: String, event: EventModel, listener: EventListener) {
             val dateText = "${event.day}/${event.month}/${event.year}"
             val capacityText = "Capacity: ${event.capacity}"
             val locationText = String.format("%.5f, %.5f", event.lat, event.lng)
@@ -52,7 +52,7 @@ class EventAdapter (events: List<EventModel>, private val listener: EventListene
             binding.eventDate.text = dateText
             binding.eventType.text = event.type
             binding.eventCapacity.text = capacityText
-            binding.btnDelete.setOnClickListener { listener.onDeleteButtonClicked(event) }
+            binding.btnDelete.setOnClickListener { listener.onDeleteButtonClicked(id, event) }
             Picasso.get()
                 .load(event.image.toUri())
                 .placeholder(R.drawable.ic_launcher_background)
@@ -60,7 +60,7 @@ class EventAdapter (events: List<EventModel>, private val listener: EventListene
                 .resize(200,200)
                 .into(binding.imageIcon)
             binding.eventLocation.text = locationText
-            binding.root.setOnClickListener { listener.onEventClick(event,adapterPosition) }
+            binding.root.setOnClickListener { listener.onEventClick(id, event) }
         }
     }
 }

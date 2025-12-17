@@ -26,7 +26,7 @@ class EventListView : AppCompatActivity(), EventListener {
     lateinit var app: MainApp
     private lateinit var binding: ActivityEventListBinding
     lateinit var presenter: EventListPresenter
-    private var position: Int = 0
+    private lateinit var adapter: EventAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +38,12 @@ class EventListView : AppCompatActivity(), EventListener {
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                handleSearch(newText)
+                presenter.handleSearch(newText)
                 return true
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                handleSearch(query)
+                presenter.handleSearch(query)
                 return true
             }
         })
@@ -81,7 +81,8 @@ class EventListView : AppCompatActivity(), EventListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        loadEvents()
+        adapter = EventAdapter(emptyList(), this)
+        binding.recyclerView.adapter = adapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -97,34 +98,41 @@ class EventListView : AppCompatActivity(), EventListener {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onEventClick(event: EventModel, position: Int) {
-        this.position = position
-        presenter.doEditEvent(event, this.position)
+    override fun onEventClick(id: String, event: EventModel) {
+        presenter.doEditEvent(id, event)
     }
 
-    override fun onDeleteButtonClicked(event: EventModel) {
+    override fun onDeleteButtonClicked(id: String, event: EventModel) {
         AlertDialog.Builder(this)
             .setTitle("Delete event")
             .setMessage("Are you sure you want to delete this event?")
             .setPositiveButton("Delete") { _, _ ->
-                presenter.doDeleteEvent(event)
+                presenter.doDeleteEvent(id)
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
-    private fun loadEvents() {
-        binding.recyclerView.adapter = EventAdapter(presenter.getEvents(), this)
-        onRefresh()
+    //https://developer.android.com/guide/components/activities/activity-lifecycle
+    override fun onStart() {
+        super.onStart()
+        presenter.startListening()
     }
 
-    fun onRefresh() {
-        (binding.recyclerView.adapter as EventAdapter).submitList(presenter.getEvents().toList())
+    override fun onStop() {
+        super.onStop()
+        presenter.stopListening()
     }
 
-    fun handleSearch(query: String?) {
-        val filtered = presenter.searchByTitle(query)
-        (binding.recyclerView.adapter as EventAdapter)
-            .submitList(filtered.toList())
+    fun showError(message: String) {
+
     }
+
+    fun loadEvents(list: List<Pair<String, EventModel>>) {
+        adapter.submitList(list)
+    }
+
+//    fun onRefresh() {
+//        (binding.recyclerView.adapter as EventAdapter).submitList(presenter.getEvents().toList())
+//    }
 }
