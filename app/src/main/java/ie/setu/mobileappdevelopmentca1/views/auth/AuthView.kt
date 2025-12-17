@@ -3,6 +3,7 @@ package ie.setu.mobileappdevelopmentca1.views.auth
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.material.snackbar.Snackbar
 import ie.setu.mobileappdevelopmentca1.databinding.ActivityAuthBinding
 import ie.setu.mobileappdevelopmentca1.views.eventList.EventListView
@@ -13,6 +14,7 @@ class AuthView : AppCompatActivity() {
     private lateinit var presenter: AuthPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)

@@ -2,7 +2,6 @@ package ie.setu.mobileappdevelopmentca1.main
 
 import android.app.Application
 import ie.setu.mobileappdevelopmentca1.models.EventFirebaseMemStore
-import ie.setu.mobileappdevelopmentca1.models.EventJSONStore
 import timber.log.Timber
 import timber.log.Timber.i
 
