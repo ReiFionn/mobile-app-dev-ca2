@@ -11,13 +11,12 @@ import ie.setu.mobileappdevelopmentca1.views.event.EventView
 
 class EventListPresenter(val view: EventListView) {
 
-    var app: MainApp
+    var app: MainApp = view.application as MainApp
     private lateinit var refreshIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private var position: Int = 0
 
     init {
-        app = view.application as MainApp
         registerMapCallback()
         registerRefreshCallback()
     }

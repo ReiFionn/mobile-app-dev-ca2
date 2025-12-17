@@ -1,7 +1,6 @@
 package ie.setu.mobileappdevelopmentca1.models
 
 import android.content.Context
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 
@@ -35,9 +34,9 @@ class EventJSONStore(val context: Context) : EventStore {
         return foundEvent
     }
 
-    fun findByTitle(title: String): List<EventModel> {
-        return events.filter {it.title.contains(title, ignoreCase = true)}
-    }
+//    fun findByTitle(title: String): List<EventModel> {
+//        return events.filter {it.title.contains(title, ignoreCase = true)}
+//    }
 
     override fun create(event: EventModel) {
         event.id = generateRandomId()

@@ -1,6 +1,5 @@
 package ie.setu.mobileappdevelopmentca1.models
 
-import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 

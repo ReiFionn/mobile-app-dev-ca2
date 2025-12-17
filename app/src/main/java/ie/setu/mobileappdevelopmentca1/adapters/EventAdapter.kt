@@ -1,7 +1,5 @@
 package ie.setu.mobileappdevelopmentca1.adapters
 
-import android.annotation.SuppressLint
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,13 +7,14 @@ import com.squareup.picasso.Picasso
 import ie.setu.mobileappdevelopmentca1.databinding.CardEventBinding
 import ie.setu.mobileappdevelopmentca1.models.EventModel
 import androidx.core.net.toUri
+import ie.setu.mobileappdevelopmentca1.R
 
 interface EventListener {
     fun onEventClick(event: EventModel, position : Int)
     fun onDeleteButtonClicked(event: EventModel)
 }
 
-class EventAdapter (private var events: List<EventModel>, private val listener: EventListener) :
+class EventAdapter (events: List<EventModel>, private val listener: EventListener) :
     RecyclerView.Adapter<EventAdapter.MainHolder>() {
 
         private val displayedEvents = events.toMutableList()
@@ -46,7 +45,7 @@ class EventAdapter (private var events: List<EventModel>, private val listener: 
         fun bind(event: EventModel, listener: EventListener) {
             val dateText = "${event.day}/${event.month}/${event.year}"
             val capacityText = "Capacity: ${event.capacity}"
-            val locationText = "${event.lat}, ${event.lng}"
+            val locationText = String.format("%.5f, %.5f", event.lat, event.lng)
 
             binding.eventTitle.text = event.title
             binding.eventDescription.text = event.description
@@ -54,7 +53,12 @@ class EventAdapter (private var events: List<EventModel>, private val listener: 
             binding.eventType.text = event.type
             binding.eventCapacity.text = capacityText
             binding.btnDelete.setOnClickListener { listener.onDeleteButtonClicked(event) }
-            Picasso.get().load(event.image.toUri()).resize(200,200).into(binding.imageIcon)
+            Picasso.get()
+                .load(event.image.toUri())
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .resize(200,200)
+                .into(binding.imageIcon)
             binding.eventLocation.text = locationText
             binding.root.setOnClickListener { listener.onEventClick(event,adapterPosition) }
         }
