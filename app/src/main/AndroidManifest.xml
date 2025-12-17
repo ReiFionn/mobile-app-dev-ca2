@@ -35,7 +35,7 @@
             android:exported="false"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".views.eventList.EventListView"
+            android:name=".views.auth.AuthView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,6 +52,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity android:name=".views.eventList.EventListView"
+            android:exported="false" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
