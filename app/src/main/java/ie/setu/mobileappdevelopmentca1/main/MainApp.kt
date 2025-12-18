@@ -17,3 +17,5 @@ class MainApp : Application() {
         i("Events started")
     }
 }
+
+//ALL USE OF CHATGPT: https://chatgpt.com/share/69433dcd-cf84-8003-b2ec-5cc4f196a0a1

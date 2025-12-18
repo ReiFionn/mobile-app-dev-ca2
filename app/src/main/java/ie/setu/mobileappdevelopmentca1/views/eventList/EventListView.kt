@@ -22,10 +22,6 @@ import ie.setu.mobileappdevelopmentca1.models.EventModel
 import ie.setu.mobileappdevelopmentca1.views.auth.AuthView
 import ie.setu.mobileappdevelopmentca1.views.event.EventView
 import ie.setu.mobileappdevelopmentca1.views.map.EventMapView
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
 class EventListView : AppCompatActivity(), EventListener {
 
     lateinit var app: MainApp
